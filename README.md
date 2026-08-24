@@ -6,7 +6,7 @@ goal model against logistic regression and XGBoost, benchmarks against
 de-vigged bookmaker odds (Bet365, Pinnacle), and backtests fractional-Kelly
 staking with proper walk-forward validation.
 
-**[Read the full write-up →](docs/report.html)** (open in a browser)
+**[Read the full write-up →](https://janpruzinec.github.io/football-value-model/)**
 
 ## Results
 
