@@ -1,0 +1,7 @@
+duckdb
+pandas
+requests
+pyyaml
+scikit-learn
+xgboost
+scipy

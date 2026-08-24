@@ -1,0 +1,18 @@
+# football-data.co.uk league codes and season range
+leagues:
+  E0: Premier League
+  D1: Bundesliga
+  I1: Serie A
+  SP1: La Liga
+  F1: Ligue 1
+
+# football-data.co.uk season format: "2324" = 2023/24
+seasons:
+  start: "1415"
+  end: "2425"
+
+edge_threshold: 0.03   # min edge over de-vigged implied prob to flag a bet
+
+kelly_fraction: 0.25   # fractional Kelly multiplier
+max_stake_pct: 0.02    # hard cap per bet, % of bankroll
+stop_loss_pct: 0.20    # halt betting if bankroll drawdown exceeds this
