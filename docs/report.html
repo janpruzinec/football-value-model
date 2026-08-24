@@ -1,0 +1,354 @@
+<title>Can You Beat Pinnacle?</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --ink:#0e1512;
+    --surface:#17211c;
+    --surface-2:#1e2b23;
+    --line:#2c3a32;
+    --paper:#eef1e9;
+    --muted:#93a696;
+    --amber:#d9a441;
+    --amber-dim:#8a6b2e;
+    --loss:#c1554a;
+    --win:#6fa287;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:"Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--amber);}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--amber); outline-offset:2px;}
+
+  .display{
+    font-family:"Big Shoulders Display", "Arial Narrow", sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+  }
+  .mono{
+    font-family:"IBM Plex Mono", "SF Mono", Menlo, monospace;
+    font-variant-numeric:tabular-nums;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  .wrap{max-width:760px; margin:0 auto; padding:0 1.5rem;}
+  .band{width:100%; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .band-inner{max-width:760px; margin:0 auto; padding:2.5rem 1.5rem;}
+
+  /* ---------- hero ---------- */
+  header.hero{padding:4.5rem 0 3rem;}
+  .hero h1{
+    font-size:clamp(2.6rem, 6vw, 4.2rem);
+    line-height:0.98;
+    margin:0.6rem 0 1.2rem;
+    text-wrap:balance;
+    color:var(--paper);
+  }
+  .hero p.lede{
+    font-size:1.15rem;
+    color:var(--muted);
+    max-width:34rem;
+    margin:0 0 2.2rem;
+  }
+
+  /* scoreline */
+  .scoreline{
+    display:flex;
+    align-items:baseline;
+    gap:1.1rem;
+    flex-wrap:wrap;
+    border-top:1px solid var(--line);
+    padding-top:1.6rem;
+  }
+  .scoreline .side{
+    font-family:"Big Shoulders Display", sans-serif;
+    font-weight:800;
+  }
+  .scoreline .num{font-size:3.2rem; line-height:1;}
+  .scoreline .who{font-size:0.85rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); font-family:"IBM Plex Mono", monospace; font-weight:400; display:block; margin-top:0.35rem;}
+  .scoreline .num.market{color:var(--amber);}
+  .scoreline .dash{font-size:1.6rem; color:var(--muted); align-self:center;}
+
+  /* ---------- sections ---------- */
+  section{padding:3rem 0;}
+  h2{
+    font-size:1.9rem;
+    margin:0 0 1.4rem;
+    color:var(--paper);
+    text-wrap:balance;
+  }
+  h3{font-size:1.15rem; margin:0 0 0.4rem; color:var(--paper); font-family:"Source Serif 4", serif; font-weight:600;}
+  p{margin:0 0 1rem; max-width:42rem;}
+  .subhead{color:var(--muted); max-width:38rem; margin-bottom:2rem;}
+
+  /* pipeline */
+  .pipeline{list-style:none; margin:0; padding:0; display:flex; flex-direction:column;}
+  .pipeline li{
+    display:grid;
+    grid-template-columns:2.4rem 1fr;
+    gap:1rem;
+    padding:1.1rem 0;
+    border-top:1px solid var(--line);
+  }
+  .pipeline li:last-child{border-bottom:1px solid var(--line);}
+  .pipeline .step-num{
+    font-family:"Big Shoulders Display", sans-serif;
+    font-weight:700;
+    font-size:1.6rem;
+    color:var(--amber-dim);
+  }
+  .pipeline h3{margin-bottom:0.3rem;}
+  .pipeline p{margin:0; color:var(--muted); font-size:0.96rem;}
+
+  /* results chart */
+  .chart{margin-top:1.6rem;}
+  .chart-title{font-size:1rem; font-weight:600; color:var(--paper); margin-bottom:0.2rem; font-family:"Source Serif 4", serif;}
+  .chart-sub{font-size:0.85rem; color:var(--muted); margin-bottom:1.1rem;}
+  .bar-row{display:grid; grid-template-columns:7rem 1fr 4.2rem; align-items:center; gap:0.8rem; padding:0.45rem 0;}
+  .bar-row .label{font-size:0.86rem; color:var(--muted);}
+  .bar-row.market .label{color:var(--amber); font-weight:600;}
+  .bar-track{height:0.62rem; background:var(--surface-2); border-radius:1px; overflow:hidden; border:1px solid var(--line);}
+  .bar-fill{height:100%; background:var(--amber-dim);}
+  .bar-row.market .bar-fill{background:var(--amber);}
+  .bar-row .val{font-size:0.82rem; text-align:right; color:var(--muted);}
+  .bar-row.market .val{color:var(--amber);}
+
+  /* stat cards */
+  .stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); margin-top:1.6rem;}
+  .stat-card{background:var(--surface); padding:1.5rem;}
+  .stat-card .stat-eyebrow{font-family:"IBM Plex Mono",monospace; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted);}
+  .stat-card .stat-num{font-family:"Big Shoulders Display", sans-serif; font-weight:800; font-size:2.6rem; margin:0.2rem 0; color:var(--paper);}
+  .stat-card .stat-num.stopped{color:var(--loss);}
+  .stat-card p{margin:0.4rem 0 0; font-size:0.88rem; color:var(--muted);}
+
+  .drawdown-gauge{margin-top:0.9rem;}
+  .gauge-track{position:relative; height:0.7rem; background:var(--surface-2); border:1px solid var(--line);}
+  .gauge-fill{height:100%; background:var(--loss);}
+  .gauge-mark{position:absolute; top:-0.3rem; bottom:-0.3rem; width:2px; background:var(--paper);}
+  .gauge-label{display:flex; justify-content:space-between; font-family:"IBM Plex Mono",monospace; font-size:0.72rem; color:var(--muted); margin-top:0.4rem;}
+
+  /* verdict */
+  .verdict{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-left:3px solid var(--amber);
+    padding:1.6rem 1.8rem;
+    margin-top:0.5rem;
+  }
+  .verdict p:last-child{margin-bottom:0;}
+
+  /* stack chips */
+  .chips{display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem;}
+  .chip{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.78rem;
+    padding:0.35rem 0.7rem;
+    border:1px solid var(--line);
+    color:var(--muted);
+    background:var(--surface);
+  }
+
+  footer{padding:3rem 0 4rem;}
+  footer .foot-row{display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:1rem; border-top:1px solid var(--line); padding-top:1.6rem;}
+  footer .foot-row .mono{font-size:0.82rem; color:var(--muted);}
+
+  @media (max-width:520px){
+    .stat-grid{grid-template-columns:1fr;}
+    .bar-row{grid-template-columns:5.2rem 1fr 3.6rem;}
+    .scoreline{gap:0.8rem;}
+    .scoreline .num{font-size:2.4rem;}
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Sports analytics · probabilistic forecasting</span>
+    <h1>Can you beat<br>Pinnacle?</h1>
+    <p class="lede">A full data pipeline built to answer one question honestly: does public match data give you any edge over the sharpest odds in football betting? Five leagues, eleven seasons, three models, and a walk-forward backtest built to find out — and report the answer even if it's no.</p>
+
+    <div class="scoreline">
+      <div class="side">
+        <span class="num market">0.967</span>
+        <span class="who">Pinnacle (fair)</span>
+      </div>
+      <span class="dash">–</span>
+      <div class="side">
+        <span class="num">0.998</span>
+        <span class="who">Best model (logreg)</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="band">
+  <div class="band-inner">
+    <span class="eyebrow">The build</span>
+    <h2 style="margin-top:0.6rem;">Four stages, one rule: nothing sees the future</h2>
+    <p class="subhead">Every feature is computed strictly from information available before kickoff. Every model is evaluated on seasons it never trained on. That discipline is the actual point of the project — a model that isn't checked this way will always look better than it is.</p>
+
+    <ol class="pipeline">
+      <li>
+        <span class="step-num display">01</span>
+        <div>
+          <h3>Ingest</h3>
+          <p>19,841 matches pulled from football-data.co.uk — Premier League, Bundesliga, Serie A, La Liga, Ligue 1, 2014/15 through 2024/25. Goals, shots, corners, cards, referees, and closing odds from Bet365 and Pinnacle, loaded into DuckDB.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-num display">02</span>
+        <div>
+          <h3>Feature engineering</h3>
+          <p>70 columns built per match: rolling 5- and 10-game form, home/away-specific splits, referee card tendency, league scoring average, head-to-head history — every rolling window shifted by one match so nothing leaks forward.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-num display">03</span>
+        <div>
+          <h3>Modeling</h3>
+          <p>An independent-Poisson goal model (the standard simplification of Dixon-Coles), logistic regression, and XGBoost — each trained fresh at every step of the walk-forward split, never touching a season it's about to be tested on.</p>
+        </div>
+      </li>
+      <li>
+        <span class="step-num display">04</span>
+        <div>
+          <h3>Backtest</h3>
+          <p>Train on all prior seasons, test on the next, roll forward. Bookmaker odds de-vigged to a fair probability. Model probability compared against that fair line — log loss and Brier score, not accuracy, because a well-calibrated 55% matters more than a correct guess.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</div>
+
+<section class="wrap">
+  <span class="eyebrow">Results</span>
+  <h2 style="margin-top:0.6rem;">The market wins both markets</h2>
+  <p class="subhead">Lower log loss means better-calibrated probabilities. Pinnacle and Bet365's de-vigged lines beat every model we built, on every market we tested — which is exactly what a genuinely efficient market should do to a hobbyist pipeline.</p>
+
+  <div class="chart">
+    <div class="chart-title">Goals over/under 2.5 &nbsp;·&nbsp; vs Bet365</div>
+    <div class="chart-sub">Log loss, walk-forward average across seasons</div>
+
+    <div class="bar-row market">
+      <span class="label">Market</span>
+      <div class="bar-track"><div class="bar-fill" style="width:18%"></div></div>
+      <span class="val mono">0.668</span>
+    </div>
+    <div class="bar-row">
+      <span class="label">Logistic reg.</span>
+      <div class="bar-track"><div class="bar-fill" style="width:31%"></div></div>
+      <span class="val mono">0.681</span>
+    </div>
+    <div class="bar-row">
+      <span class="label">XGBoost</span>
+      <div class="bar-track"><div class="bar-fill" style="width:34%"></div></div>
+      <span class="val mono">0.684</span>
+    </div>
+    <div class="bar-row">
+      <span class="label">Poisson</span>
+      <div class="bar-track"><div class="bar-fill" style="width:93%"></div></div>
+      <span class="val mono">0.743</span>
+    </div>
+  </div>
+
+  <div class="chart" style="margin-top:2.4rem;">
+    <div class="chart-title">Match result (1X2) &nbsp;·&nbsp; vs Pinnacle</div>
+    <div class="chart-sub">Log loss, walk-forward average across seasons</div>
+
+    <div class="bar-row market">
+      <span class="label">Market</span>
+      <div class="bar-track"><div class="bar-fill" style="width:17%"></div></div>
+      <span class="val mono">0.967</span>
+    </div>
+    <div class="bar-row">
+      <span class="label">Logistic reg.</span>
+      <div class="bar-track"><div class="bar-fill" style="width:48%"></div></div>
+      <span class="val mono">0.998</span>
+    </div>
+    <div class="bar-row">
+      <span class="label">XGBoost</span>
+      <div class="bar-track"><div class="bar-fill" style="width:54%"></div></div>
+      <span class="val mono">1.004</span>
+    </div>
+    <div class="bar-row">
+      <span class="label">Poisson</span>
+      <div class="bar-track"><div class="bar-fill" style="width:84%"></div></div>
+      <span class="val mono">1.034</span>
+    </div>
+  </div>
+</section>
+
+<div class="band">
+  <div class="band-inner">
+    <span class="eyebrow">Risk management</span>
+    <h2 style="margin-top:0.6rem;">The stop-loss did its job</h2>
+    <p class="subhead">With no real edge to exploit, a staking simulation should lose slowly and then stop — not grind on hoping the model turns a corner. Fractional Kelly (25%), capped at 2% of bankroll per bet, with a hard 20% drawdown stop-loss, tested against both markets:</p>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <span class="stat-eyebrow">Goals O/U 2.5</span>
+        <div class="stat-num stopped">0.827×</div>
+        <p>final bankroll — stopped early</p>
+        <div class="drawdown-gauge">
+          <div class="gauge-track">
+            <div class="gauge-fill" style="width:103%"></div>
+            <div class="gauge-mark" style="left:97%"></div>
+          </div>
+          <div class="gauge-label"><span>0%</span><span class="mono">20.6% drawdown</span></div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-eyebrow">Match result 1X2</span>
+        <div class="stat-num stopped">0.797×</div>
+        <p>final bankroll — stopped early</p>
+        <div class="drawdown-gauge">
+          <div class="gauge-track">
+            <div class="gauge-fill" style="width:104%"></div>
+            <div class="gauge-mark" style="left:96%"></div>
+          </div>
+          <div class="gauge-label"><span>0%</span><span class="mono">20.8% drawdown</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="wrap">
+  <span class="eyebrow">The honest finding</span>
+  <h2 style="margin-top:0.6rem;">No, you can't — and that's the result</h2>
+  <div class="verdict">
+    <p>Pinnacle in particular is one of the sharpest lines in all of sports betting; beating it with free box-score data was never the realistic outcome. The value of this project isn't a profitable strategy — it's a pipeline that can <em>tell the difference</em> between a real edge and noise, and a risk system that shuts itself down the moment the evidence says to stop.</p>
+    <p>That distinction — proving an edge doesn't exist, rigorously, rather than quietly overfitting until it looks like one does — is the harder and more useful skill to demonstrate.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="eyebrow">Built with</span>
+    <div class="chips">
+      <span class="chip">Python</span>
+      <span class="chip">DuckDB</span>
+      <span class="chip">pandas</span>
+      <span class="chip">scikit-learn</span>
+      <span class="chip">XGBoost</span>
+      <span class="chip">statsmodels</span>
+    </div>
+    <div class="foot-row">
+      <span class="mono">football-value-model</span>
+      <a class="mono" href="https://github.com/janpruzinec/football-value-model">github.com/janpruzinec/football-value-model</a>
+    </div>
+  </div>
+</footer>
