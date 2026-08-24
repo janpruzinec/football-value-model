@@ -47,6 +47,22 @@ def _expected_goals(fitted, home_team: str, away_team: str) -> tuple[float, floa
     return mu_home, mu_away
 
 
+def predict_result_probs(fitted, matches: pd.DataFrame) -> pd.DataFrame:
+    """P(home win), P(draw), P(away win) from the joint scoreline grid."""
+    goal_grid = np.arange(0, MAX_GOALS + 1)
+    rows = []
+    for home_team, away_team in zip(matches["HomeTeam"], matches["AwayTeam"]):
+        mu_h, mu_a = _expected_goals(fitted, home_team, away_team)
+        ph = poisson.pmf(goal_grid, mu_h)
+        pa = poisson.pmf(goal_grid, mu_a)
+        joint = np.outer(ph, pa)  # joint[i, j] = P(home scores i, away scores j)
+        p_home = np.tril(joint, -1).sum()
+        p_draw = np.trace(joint)
+        p_away = np.triu(joint, 1).sum()
+        rows.append((p_home, p_draw, p_away))
+    return pd.DataFrame(rows, index=matches.index, columns=["p_home", "p_draw", "p_away"])
+
+
 def predict_over_prob(fitted, matches: pd.DataFrame, line: float = 2.5) -> pd.Series:
     goal_grid = np.arange(0, MAX_GOALS + 1)
     probs = []

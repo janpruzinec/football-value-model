@@ -17,3 +17,9 @@ def fit(train_df: pd.DataFrame, feature_cols: list[str], target_col: str):
 def predict_over_prob(model, df: pd.DataFrame, feature_cols: list[str]) -> pd.Series:
     proba = model.predict_proba(df[feature_cols])[:, 1]
     return pd.Series(proba, index=df.index)
+
+
+def predict_proba(model, df: pd.DataFrame, feature_cols: list[str]) -> pd.DataFrame:
+    """Full class-probability matrix, columns labeled by the model's classes."""
+    proba = model.predict_proba(df[feature_cols])
+    return pd.DataFrame(proba, index=df.index, columns=model.classes_)

@@ -18,6 +18,20 @@ def devig_two_way(odds_over: pd.Series, odds_under: pd.Series) -> pd.DataFrame:
     })
 
 
+def devig_three_way(odds_h: pd.Series, odds_d: pd.Series, odds_a: pd.Series) -> pd.DataFrame:
+    """Remove overround from a three-outcome market (match result 1X2),
+    using the basic proportional method (Shin's method is a known, more
+    accurate alternative, skipped here for simplicity)."""
+    p_h, p_d, p_a = implied_prob(odds_h), implied_prob(odds_d), implied_prob(odds_a)
+    overround = p_h + p_d + p_a
+    return pd.DataFrame({
+        "p_h_fair": p_h / overround,
+        "p_d_fair": p_d / overround,
+        "p_a_fair": p_a / overround,
+        "overround": overround,
+    })
+
+
 def edge(model_prob: pd.Series, fair_prob: pd.Series) -> pd.Series:
     """Model's edge over the market's own fair (de-vigged) probability."""
     return model_prob - fair_prob
